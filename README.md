@@ -70,3 +70,68 @@ Week 1 basic API connection is working successfully.
 - Upload the project to GitHub
 - Add a screenshot of the successful run
 - Continue to Week 2: building a real Express API endpoint
+
+## Week 2 — Express AI API Endpoint
+
+In this week I built a real Express API endpoint that receives text, sends it to the OpenAI API, and returns a JSON response.
+
+## What I built
+
+- Express server running on port 3000
+- GET `/` health endpoint
+- POST `/api/analyze` endpoint
+- JSON request body support
+- Input validation for empty text
+- OpenAI API call from the backend
+- JSON response with input, result, and tokens_used
+- Basic error handling
+
+## How to run Week 2
+
+Start the server:
+
+node .\week-02-express-api\server.js
+
+Send a valid request from PowerShell:
+
+$body = @{
+  text = "AI can help developers build products faster."
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3000/api/analyze" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+
+Test validation with empty text:
+
+$body = @{
+  text = ""
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3000/api/analyze" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+
+Expected validation response:
+
+{"error":"text is required"}
+
+## Week 2 status
+
+Completed:
+
+- Installed Express
+- Created `server.js`
+- Built a basic Express server on port 3000
+- Added POST `/api/analyze`
+- Received JSON in the format `{ text: "..." }`
+- Validated that text is not empty
+- Sent text to OpenAI
+- Returned JSON response
+- Returned `tokens_used`
+- Tested valid request
+- Tested empty text error handling

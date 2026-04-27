@@ -359,3 +359,106 @@ Completed:
 - Displayed tokens used
 - Tested successful request
 - Tested empty input error
+## Week 6 — AI Chat With History
+
+In this week I built a chat feature that saves conversation history in PostgreSQL.
+
+## What I built
+
+- `chat_sessions` table
+- `chat_messages` table
+- `createSession` function
+- `getMessages` function
+- `addMessage` function
+- `POST /api/chat/session` endpoint
+- `POST /api/chat` endpoint
+- Backend support for chat history
+- Frontend `ChatBot.jsx` component
+- Automatic session creation when the component loads
+- Display of user and assistant messages
+- Message input and Send button
+- Loading state while sending
+- Empty message validation
+- Automatic scroll to the latest message
+- Saving user and assistant messages in PostgreSQL
+- Returning tokens used for assistant responses
+
+## Database tables
+
+chat_sessions:
+- id
+- title
+- created_at
+
+chat_messages:
+- id
+- session_id
+- role
+- content
+- tokens_used
+- created_at
+
+## Backend endpoints
+
+Create chat session:
+
+POST http://localhost:3003/api/chat/session
+
+Send chat message:
+
+POST http://localhost:3003/api/chat
+
+Example request body:
+
+{
+  "sessionId": 6,
+  "message": "Explain why saving chat history in a database is useful."
+}
+
+## Frontend
+
+The chat UI is located in:
+
+ai-frontend/src/components/ChatBot.jsx
+
+The frontend includes navigation between:
+
+- AI Analyzer
+- Chat With History
+
+## How to run Week 6
+
+Start the Week 6 backend:
+
+node .\week-06-chat-history\server.js
+
+Start the frontend:
+
+cd ai-frontend
+npm run dev
+
+Open:
+
+http://localhost:5173
+
+## Week 6 status
+
+Completed:
+
+- Created `chat_sessions` and `chat_messages` tables
+- Implemented `createSession`
+- Implemented `getMessages`
+- Implemented `addMessage`
+- Added `POST /api/chat/session`
+- Added `POST /api/chat`
+- Saved user messages in PostgreSQL
+- Saved assistant messages in PostgreSQL
+- Sent chat history to OpenAI
+- Built `ChatBot.jsx`
+- Created session on component load
+- Displayed user and assistant messages
+- Added Send button
+- Added loading state
+- Added empty message validation
+- Added auto-scroll to latest message
+- Verified messages are saved in PostgreSQL

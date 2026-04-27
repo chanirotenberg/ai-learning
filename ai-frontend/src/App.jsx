@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AISummarizer from "./components/AISummarizer";
 import ChatBot from "./components/ChatBot";
+import SummariesList from "./components/SummariesList";
 import "./App.css";
 
 function App() {
@@ -22,10 +23,18 @@ function App() {
         >
           Chat With History
         </button>
+
+        <button
+          className={page === "summaries" ? "nav-button active" : "nav-button"}
+          onClick={() => setPage("summaries")}
+        >
+          All Summaries
+        </button>
       </nav>
 
       {page === "summarizer" && <AISummarizer />}
       {page === "chat" && <ChatBot />}
+      {page === "summaries" && <SummariesList />}
     </>
   );
 }

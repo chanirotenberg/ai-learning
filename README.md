@@ -462,3 +462,79 @@ Completed:
 - Added empty message validation
 - Added auto-scroll to latest message
 - Verified messages are saved in PostgreSQL
+
+## Week 7 — Summaries List and Search
+
+In this week I built a summaries management screen that displays AI summaries saved in PostgreSQL.
+
+## What I built
+
+- `GET /api/summaries` endpoint
+- Basic pagination with `page` and `limit`
+- Sorting summaries by `created_at DESC`
+- `GET /api/summaries/search?q=...` endpoint
+- Search by document title, document content, or summary text
+- React `SummariesList.jsx` component
+- Search input
+- Summary cards
+- Loading state
+- Empty state when no results are found
+- Navigation between AI Analyzer, Chat With History, and All Summaries
+- Responsive layout for smaller screens
+
+## Backend endpoints
+
+Get all summaries:
+
+GET http://localhost:3004/api/summaries
+
+Search summaries:
+
+GET http://localhost:3004/api/summaries/search?q=AI
+
+## Frontend
+
+The summaries UI is located in:
+
+ai-frontend/src/components/SummariesList.jsx
+
+The app navigation now includes:
+
+- AI Analyzer
+- Chat With History
+- All Summaries
+
+## How to run Week 7
+
+Start the Week 7 backend:
+
+node .\week-07-summaries-list\server.js
+
+Start the frontend:
+
+cd ai-frontend
+npm run dev
+
+Open:
+
+http://localhost:5173
+
+## Week 7 status
+
+Completed:
+
+- Added `GET /api/summaries`
+- Added basic pagination
+- Added sorting by `created_at`
+- Added `GET /api/summaries/search`
+- Added search by title, content, and summary
+- Created `SummariesList.jsx`
+- Displayed summaries as cards
+- Added search input
+- Added loading state
+- Added empty state
+- Added navigation to All Summaries
+- Tested summaries list
+- Tested search
+- Tested empty state
+- Tested responsive layout

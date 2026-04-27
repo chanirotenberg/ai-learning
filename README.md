@@ -217,3 +217,85 @@ Completed:
 - Built Express endpoint for document summarization
 - Tested valid document id
 - Tested missing document id
+
+## Week 4 — Production Quality Improvements
+
+In this week I improved the AI backend so it is closer to production quality.
+
+## What I built
+
+- Centralized configuration file: `config.js`
+- Required environment variable validation
+- `.env.example` file for documenting required environment variables
+- Centralized Winston logger
+- `combined.log` for all logs
+- `error.log` for errors only
+- `.gitignore` update to prevent log files from being committed
+- Joi validation for route parameters
+- Centralized error handling middleware
+- Cleaner Express server structure
+- Better error responses for invalid input and missing documents
+
+## Environment variables
+
+The real `.env` file is not committed to GitHub.
+
+Example variables are documented in `.env.example`:
+
+- `OPENAI_API_KEY`
+- `DATABASE_URL`
+- `PORT`
+- `NODE_ENV`
+- `OPENAI_MODEL`
+
+## How to run Week 4
+
+Start the server:
+
+node .\week-04-production-quality\server.js
+
+Summarize document with id 1:
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3002/api/documents/1/summarize" `
+  -Method POST
+
+Test invalid document id:
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3002/api/documents/abc/summarize" `
+  -Method POST
+
+Expected validation error:
+
+{"error":"\"id\" must be a number"}
+
+Test missing document:
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3002/api/documents/999/summarize" `
+  -Method POST
+
+Expected not found error:
+
+{"error":"Document not found"}
+
+## Week 4 status
+
+Completed:
+
+- Installed Joi
+- Installed Winston
+- Created `config.js`
+- Created `logger.js`
+- Created `validation.js`
+- Created `errors.js`
+- Created production-quality `server.js`
+- Added centralized error middleware
+- Added validation for document id
+- Added structured logs
+- Added `.env.example`
+- Ignored `.env`, `node_modules`, and log files
+- Tested successful summarization
+- Tested invalid id validation
+- Tested missing document handling

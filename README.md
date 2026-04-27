@@ -135,3 +135,85 @@ Completed:
 - Returned `tokens_used`
 - Tested valid request
 - Tested empty text error handling
+## Week 3 — PostgreSQL AI Summarization
+
+In this week I connected the AI backend to real data stored in PostgreSQL.
+
+## What I built
+
+- PostgreSQL database named `ai_learning_db`
+- `documents` table for storing source documents
+- `summaries` table for storing AI-generated summaries
+- Node.js PostgreSQL connection using the `pg` package
+- `getDocument(id)` function for reading a document from the database
+- `saveSummary(documentId, summary, tokensUsed)` function for saving summaries
+- Script that reads a document, summarizes it with OpenAI, and saves the result
+- Express endpoint: `POST /api/documents/:id/summarize`
+
+## Database tables
+
+Documents table:
+
+documents
+- id
+- title
+- content
+- created_at
+
+Summaries table:
+
+summaries
+- id
+- document_id
+- summary
+- tokens_used
+- created_at
+
+## How to run Week 3
+
+Start the Week 3 server:
+
+node .\week-03-postgres-ai\server.js
+
+Summarize document with id 1:
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3001/api/documents/1/summarize" `
+  -Method POST
+
+Expected successful response includes:
+
+- document_id
+- title
+- summary
+- tokens_used
+- summary_id
+
+Test missing document:
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3001/api/documents/999/summarize" `
+  -Method POST
+
+Expected error response:
+
+{"error":"Document not found"}
+
+## Week 3 status
+
+Completed:
+
+- PostgreSQL installed and running locally
+- Created `ai_learning_db`
+- Created `documents` and `summaries` tables
+- Inserted sample document
+- Connected Node.js to PostgreSQL
+- Created `db.js`
+- Created `database.js`
+- Implemented `getDocument`
+- Implemented `saveSummary`
+- Summarized a document with OpenAI
+- Saved AI summary back to PostgreSQL
+- Built Express endpoint for document summarization
+- Tested valid document id
+- Tested missing document id

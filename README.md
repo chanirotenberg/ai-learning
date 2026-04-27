@@ -299,3 +299,63 @@ Completed:
 - Tested successful summarization
 - Tested invalid id validation
 - Tested missing document handling
+
+## Week 5 — React UI for AI Endpoint
+
+In this week I built a React frontend that connects to the Express AI endpoint.
+
+## What I built
+
+- React app using Vite
+- `AISummarizer` component
+- Textarea for user input
+- Analyze button
+- Loading state while calling the backend
+- Error message for empty input or server errors
+- AI response display
+- Tokens used display
+- Frontend request to the backend using Axios
+
+## Frontend location
+
+The Week 5 frontend is located in:
+
+ai-frontend/
+
+## Backend used
+
+The frontend calls the Week 2 backend endpoint:
+
+POST http://localhost:3000/api/analyze
+
+## How to run Week 5
+
+Start the backend from the project root:
+
+node .\week-02-express-api\server.js
+
+Start the frontend:
+
+cd ai-frontend
+npm run dev
+
+Open:
+
+http://localhost:5173
+
+## Week 5 status
+
+Completed:
+
+- Created Vite React project
+- Installed dependencies
+- Installed Axios
+- Created `AISummarizer.jsx`
+- Added textarea input
+- Added Analyze button
+- Added loading state
+- Added error display
+- Displayed AI response from the backend
+- Displayed tokens used
+- Tested successful request
+- Tested empty input error

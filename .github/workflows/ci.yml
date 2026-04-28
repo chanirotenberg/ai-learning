@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ai-frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ai-frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        env:
+          VITE_API_BASE_URL: http://localhost:3000
+          VITE_CHAT_API_BASE_URL: http://localhost:3003
+          VITE_SUMMARIES_API_BASE_URL: http://localhost:3004
+        run: npm run build

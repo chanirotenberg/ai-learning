@@ -632,3 +632,94 @@ Completed:
 - Added GitHub Actions CI workflow
 - Verified CI is green on GitHub
 - Pushed all Week 8 work to GitHub
+
+## Week 9 — LangChain Basics
+
+In this week I learned how to use LangChain with OpenAI in Node.js.
+
+## What I built
+
+- Installed `langchain`
+- Installed `@langchain/core`
+- Installed `@langchain/openai`
+- Created a basic LangChain test file
+- Used `ChatOpenAI`
+- Used `ChatPromptTemplate`
+- Built a sentiment analysis chain
+- Created reusable `chains.js`
+- Added `analyzeSentiment(text)`
+- Created an Express endpoint powered by LangChain
+- Tested success and validation error scenarios
+
+## LangChain flow
+
+Prompt Template
+→ ChatOpenAI model
+→ Chain
+→ invoke()
+→ AI response
+
+## Backend endpoint
+
+Analyze text using LangChain:
+
+POST http://localhost:3005/api/analyze-with-chain
+
+Example request body:
+
+{
+  "text": "This feature is clean, fast, and very helpful."
+}
+
+Successful response includes:
+
+- input
+- result
+- powered_by: LangChain
+
+## Raw OpenAI API vs LangChain
+
+Raw OpenAI API is useful for simple direct calls.
+
+LangChain is useful when the flow becomes more structured, for example:
+
+- reusable prompt templates
+- multiple steps
+- memory
+- RAG
+- tools
+- agents
+
+## How to run Week 9
+
+Start the LangChain server:
+
+node .\week-09-langchain\server.js
+
+Test the endpoint from PowerShell:
+
+$body = @{
+  text = "This feature is clean, fast, and very helpful."
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3005/api/analyze-with-chain" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+
+## Week 9 status
+
+Completed:
+
+- Installed LangChain packages
+- Created `test-langchain.js`
+- Created `chains.js`
+- Created `test-chain.js`
+- Created `server.js`
+- Built a sentiment analysis chain
+- Connected the chain to Express
+- Added `/api/analyze-with-chain`
+- Tested a successful request
+- Tested empty text validation
+- Compared raw OpenAI API with LangChain

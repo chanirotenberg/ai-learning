@@ -17,8 +17,10 @@ export default function ChatBot() {
         setLoadingSession(true);
         setError("");
 
+        const chatApiBaseUrl = import.meta.env.VITE_CHAT_API_BASE_URL;
+
         const response = await axios.post(
-          "http://localhost:3003/api/chat/session",
+          `${chatApiBaseUrl}/api/chat/session`,
           {
             title: "Frontend chat",
           }
@@ -67,7 +69,9 @@ export default function ChatBot() {
     try {
       setSending(true);
 
-      const response = await axios.post("http://localhost:3003/api/chat", {
+        const chatApiBaseUrl = import.meta.env.VITE_CHAT_API_BASE_URL;
+
+      const response = await axios.post(`${chatApiBaseUrl}/api/chat`, {
         sessionId,
         message: userMessage.content,
       });

@@ -538,3 +538,97 @@ Completed:
 - Tested search
 - Tested empty state
 - Tested responsive layout
+
+## Week 8 — Deployment Preparation and CI
+
+In this week I prepared the project for future production deployment.
+
+## What I built
+
+- Verified that the React frontend builds successfully for production
+- Created `DEPLOYMENT.md`
+- Created `AWS_DEPLOYMENT_CHECKLIST.md`
+- Documented the future AWS architecture
+- Prepared frontend environment variables
+- Replaced hardcoded frontend API URLs with Vite environment variables
+- Added GitHub Actions CI workflow
+- Verified that frontend build passes in GitHub Actions
+
+## Frontend production build
+
+Build command:
+
+npm run build
+
+Build output:
+
+ai-frontend/dist
+
+The `dist` folder is generated locally and is not committed to GitHub.
+
+## Frontend environment variables
+
+The frontend now uses Vite environment variables:
+
+- `VITE_API_BASE_URL`
+- `VITE_CHAT_API_BASE_URL`
+- `VITE_SUMMARIES_API_BASE_URL`
+
+Local example:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+VITE_CHAT_API_BASE_URL=http://localhost:3003
+VITE_SUMMARIES_API_BASE_URL=http://localhost:3004
+
+```
+
+## Future AWS architecture
+
+The planned deployment architecture is:
+
+React Frontend
+→ S3 + CloudFront
+→ Node.js Backend on EC2
+→ RDS PostgreSQL
+→ CloudWatch Logs
+→ GitHub Actions CI/CD
+
+## CI
+
+A GitHub Actions workflow was added:
+
+.github/workflows/ci.yml
+
+The CI workflow runs on:
+
+- push to `main`
+- pull request to `main`
+
+It performs:
+
+- checkout
+- Node.js 20 setup
+- `npm ci`
+- frontend production build
+
+## Deployment documentation
+
+Deployment planning files:
+
+- `DEPLOYMENT.md`
+- `AWS_DEPLOYMENT_CHECKLIST.md`
+
+## Week 8 status
+
+Completed:
+
+- Built React frontend with `npm run build`
+- Verified production build works
+- Added deployment plan
+- Added AWS deployment checklist
+- Added frontend env variables
+- Removed hardcoded localhost URLs from frontend components
+- Added GitHub Actions CI workflow
+- Verified CI is green on GitHub
+- Pushed all Week 8 work to GitHub

@@ -791,6 +791,40 @@ rag_embeddings:
 - `week-10-rag-pgvector/test-rag.js`
 - `week-10-rag-pgvector/server.js`
 
+## Frontend integration
+
+I also connected the Week 10 RAG backend to the React frontend.
+
+What was added:
+
+- New React component: `ai-frontend/src/components/RagSearch.jsx`
+- New navigation tab: `RAG Search`
+- Frontend request to the RAG backend using Axios
+- Question textarea
+- Ask RAG button
+- Loading state
+- Error handling
+- AI answer display
+- Sources display
+- Token usage display
+
+The frontend calls this backend endpoint:
+
+POST http://localhost:3006/api/rag-search
+
+Frontend environment variable:
+
+```env
+VITE_RAG_API_BASE_URL=http://localhost:3006
+```
+
+The app navigation now includes:
+
+- AI Analyzer
+- Chat With History
+- All Summaries
+- RAG Search
+
 ## Endpoint
 
 RAG search endpoint:

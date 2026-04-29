@@ -2,6 +2,7 @@ import { useState } from "react";
 import AISummarizer from "./components/AISummarizer";
 import ChatBot from "./components/ChatBot";
 import SummariesList from "./components/SummariesList";
+import RagSearch from "./components/RagSearch";
 import "./App.css";
 
 function App() {
@@ -30,11 +31,19 @@ function App() {
         >
           All Summaries
         </button>
+
+        <button
+          className={page === "rag" ? "nav-button active" : "nav-button"}
+          onClick={() => setPage("rag")}
+        >
+          RAG Search
+        </button>
       </nav>
 
       {page === "summarizer" && <AISummarizer />}
       {page === "chat" && <ChatBot />}
       {page === "summaries" && <SummariesList />}
+      {page === "rag" && <RagSearch />}
     </>
   );
 }

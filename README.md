@@ -723,3 +723,133 @@ Completed:
 - Tested a successful request
 - Tested empty text validation
 - Compared raw OpenAI API with LangChain
+
+## Week 10 — Vector DB and Basic RAG with pgvector
+
+In this week I built a real RAG flow using PostgreSQL with pgvector.
+
+## What I built
+
+- Installed Docker Desktop
+- Ran PostgreSQL with pgvector in Docker
+- Created a separate RAG database named `rag_db`
+- Enabled the `vector` extension
+- Created `rag_documents` table
+- Created `rag_embeddings` table with `embedding vector(1536)`
+- Connected Node.js to the Docker PostgreSQL database using `RAG_DATABASE_URL`
+- Generated embeddings with OpenAI `text-embedding-3-small`
+- Stored embeddings in pgvector
+- Built semantic search with pgvector distance search
+- Built a basic RAG answer flow
+- Added `POST /api/rag-search`
+
+## RAG architecture
+
+User question
+→ OpenAI embedding
+→ pgvector similarity search
+→ relevant sources
+→ context
+→ OpenAI answer
+→ answer + sources
+
+## Docker PostgreSQL pgvector
+
+Docker container:
+
+pgvector-db
+
+Database connection:
+
+postgresql://postgres:postgres@localhost:5433/rag_db
+
+## Database tables
+
+rag_documents:
+
+- id
+- title
+- content
+- created_at
+
+rag_embeddings:
+
+- id
+- document_id
+- content
+- embedding vector(1536)
+- created_at
+
+## Main files
+
+- `week-10-rag-pgvector/db.js`
+- `week-10-rag-pgvector/embeddings.js`
+- `week-10-rag-pgvector/rag-database.js`
+- `week-10-rag-pgvector/seed-rag.js`
+- `week-10-rag-pgvector/test-search.js`
+- `week-10-rag-pgvector/rag-answer.js`
+- `week-10-rag-pgvector/test-rag.js`
+- `week-10-rag-pgvector/server.js`
+
+## Endpoint
+
+RAG search endpoint:
+
+POST http://localhost:3006/api/rag-search
+
+Example request:
+
+{
+  "question": "How can AI help software developers?"
+}
+
+Successful response includes:
+
+- question
+- answer
+- sources
+- tokens_used
+
+## How to run Week 10
+
+Start Docker container if needed:
+
+docker start pgvector-db
+
+Start the RAG API:
+
+node .\week-10-rag-pgvector\server.js
+
+Test from PowerShell:
+
+$body = @{
+  question = "How can AI help software developers?"
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3006/api/rag-search" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+
+## Week 10 status
+
+Completed:
+
+- Installed and configured Docker Desktop
+- Ran PostgreSQL with pgvector
+- Enabled `CREATE EXTENSION vector`
+- Created RAG tables
+- Verified `vector` extension exists
+- Generated embeddings with `text-embedding-3-small`
+- Verified embedding dimension is 1536
+- Stored embeddings as real pgvector vectors
+- Implemented `generateEmbedding`
+- Implemented `storeEmbedding`
+- Implemented `searchSimilar`
+- Built RAG context from similar documents
+- Sent question and context to OpenAI
+- Returned answer and sources
+- Added `/api/rag-search`
+- Tested valid RAG question
+- Tested empty question validation

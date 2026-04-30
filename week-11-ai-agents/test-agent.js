@@ -1,7 +1,8 @@
 import { runAgent } from "./agent.js";
 
 async function main() {
-const result = await runAgent("Search for documents about AI.");
+  const result = await runAgent("Summarize documents about AI.");
+
   console.log("Agent answer:");
   console.log(result.answer);
 

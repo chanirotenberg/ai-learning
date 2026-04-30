@@ -28,4 +28,21 @@ export const tools = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "summarize_documents",
+      description: "Search RAG documents by query and summarize the matching documents.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "The topic or text query to search and summarize.",
+          },
+        },
+        required: ["query"],
+      },
+    },
+  },
 ];

@@ -1,4 +1,10 @@
+import "dotenv/config";
+import OpenAI from "openai";
 import { pool } from "../week-10-rag-pgvector/db.js";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function getDocumentCount() {
   const result = await pool.query("SELECT COUNT(*) FROM rag_documents");
@@ -32,6 +38,45 @@ export async function searchDocuments({ query }) {
   };
 }
 
+export async function summarizeDocuments({ query }) {
+  const searchResult = await searchDocuments({ query });
+
+  if (searchResult.documents.length === 0) {
+    return {
+      query,
+      summary: "No matching documents found.",
+      documents: [],
+      tokens_used: 0,
+    };
+  }
+
+  const context = searchResult.documents
+    .map((document) => `Title: ${document.title}\nContent: ${document.content}`)
+    .join("\n\n---\n\n");
+
+  const response = await openai.chat.completions.create({
+    model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You summarize documents clearly and briefly. Base your summary only on the provided documents.",
+      },
+      {
+        role: "user",
+        content: `Summarize these documents:\n\n${context}`,
+      },
+    ],
+  });
+
+  return {
+    query,
+    summary: response.choices[0].message.content,
+    documents: searchResult.documents,
+    tokens_used: response.usage?.total_tokens || 0,
+  };
+}
+
 export async function executeToolCall(toolCall) {
   const toolName = toolCall.function.name;
   const args = JSON.parse(toolCall.function.arguments || "{}");
@@ -42,6 +87,10 @@ export async function executeToolCall(toolCall) {
 
   if (toolName === "search_documents") {
     return searchDocuments(args);
+  }
+
+  if (toolName === "summarize_documents") {
+    return summarizeDocuments(args);
   }
 
   throw new Error(`Unknown tool: ${toolName}`);

@@ -887,3 +887,102 @@ Completed:
 - Added `/api/rag-search`
 - Tested valid RAG question
 - Tested empty question validation
+
+## Week 11 — AI Agents with Tool Calling
+
+In this week I built a basic AI agent that can choose and run tools.
+
+## What I built
+
+- Created a new folder: `week-11-ai-agents`
+- Defined tool schemas in `tools.js`
+- Implemented tool functions in `toolImplementations.js`
+- Built an agent loop in `agent.js`
+- Added a test script: `test-agent.js`
+- Added an Express server: `server.js`
+- Added HTTP endpoint: `POST /api/agent`
+
+## Tools
+
+The agent currently supports three tools:
+
+- `get_document_count`
+- `search_documents`
+- `summarize_documents`
+
+## Agent flow
+
+User message
+→ OpenAI model
+→ model decides whether to call a tool
+→ Node.js runs the selected tool
+→ tool result is returned to the model
+→ model returns final answer
+
+## Backend endpoint
+
+Agent endpoint:
+
+POST http://localhost:3007/api/agent
+
+Example request:
+
+```json
+{
+  "message": "How many RAG documents do I have?"
+}
+```
+
+Example supported questions:
+
+```text
+How many RAG documents do I have?
+Search for documents about AI.
+Summarize documents about AI.
+```
+
+Successful response includes:
+
+- `message`
+- `answer`
+- `used_tools`
+- `tool_results`
+- `tokens_used`
+
+## How to run Week 11
+
+Start the Agent server:
+
+```powershell
+node .\week-11-ai-agents\server.js
+```
+
+Test from PowerShell:
+
+```powershell
+$body = @{
+  message = "Summarize documents about AI."
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3007/api/agent" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+```
+
+## Week 11 status
+
+Completed:
+
+- Created basic AI agent
+- Added tool schema definitions
+- Added `get_document_count`
+- Added `search_documents`
+- Added `summarize_documents`
+- Connected tools to the existing RAG database
+- Built an agent loop
+- Tested tool calling from script
+- Added Express endpoint
+- Tested tool calling through HTTP
+- Verified validation for empty message

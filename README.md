@@ -986,3 +986,139 @@ Completed:
 - Added Express endpoint
 - Tested tool calling through HTTP
 - Verified validation for empty message
+
+## Week 12 — Reliability and Costs
+
+In this week I improved the AI system with retry logic, rate limiting, cost tracking, and Redis caching.
+
+## What I built
+
+- Retry helper using `p-retry`
+- Rate limiting using `express-rate-limit`
+- Cost tracking by model and token usage
+- `/api/stats` endpoint
+- Redis cache for embeddings
+- Embedding cache with 24-hour TTL
+- Cache integration inside `generateEmbedding`
+
+## Retry
+
+Created:
+
+- `week-12-reliability-costs/retryHelper.js`
+- `week-12-reliability-costs/test-retry.js`
+
+The retry helper:
+
+- retries failed operations up to 3 times
+- logs failed attempts
+- helps protect AI calls from temporary network/API failures
+
+## Rate Limiting
+
+Created:
+
+- `week-12-reliability-costs/rateLimiters.js`
+
+Added:
+
+- general limiter for `/api`
+- stricter limiter for `POST /api/agent`
+
+The API returns HTTP `429` when too many AI requests are sent.
+
+## Cost Tracking
+
+Created:
+
+- `week-12-reliability-costs/costTracker.js`
+- `week-12-reliability-costs/test-cost-tracker.js`
+
+The agent now returns:
+
+- `tokens_used`
+- `estimated_cost_usd`
+
+Stats endpoint:
+
+```http
+GET /api/stats
+```
+
+## Redis Embedding Cache
+
+Redis runs in Docker:
+
+```powershell
+docker run --name redis-cache -p 6379:6379 -d redis:7
+```
+
+Created:
+
+- `week-12-reliability-costs/redisClient.js`
+- `week-12-reliability-costs/embeddingCache.js`
+- `week-12-reliability-costs/test-embedding-cache.js`
+
+The embedding cache:
+
+- stores embeddings by text
+- uses Redis
+- uses a 24-hour TTL
+- prevents repeated OpenAI embedding calls for the same text
+
+## How to run Week 12 checks
+
+Test retry:
+
+```powershell
+node .\week-12-reliability-costs\test-retry.js
+```
+
+Test cost tracking:
+
+```powershell
+node .\week-12-reliability-costs\test-cost-tracker.js
+```
+
+Test embedding cache:
+
+```powershell
+node .\week-12-reliability-costs\test-embedding-cache.js
+```
+
+Test RAG embedding cache:
+
+```powershell
+node .\week-10-rag-pgvector\test-search.js
+node .\week-10-rag-pgvector\test-search.js
+```
+
+The second run should show:
+
+```text
+Embedding cache hit
+```
+
+## Week 12 status
+
+Completed:
+
+- Installed `p-retry`
+- Created `retryHelper.js`
+- Configured up to 3 retries
+- Added failed attempt logging
+- Installed `express-rate-limit`
+- Added general API rate limit
+- Added stricter AI endpoint rate limit
+- Verified HTTP 429 response
+- Created `costTracker.js`
+- Calculated cost by tokens and model
+- Returned estimated cost after AI calls
+- Added `GET /api/stats`
+- Installed Redis
+- Installed Node Redis client
+- Created Redis client
+- Stored embeddings by text
+- Configured 24-hour cache TTL
+- Verified cache hit
+- Verified repeated embedding calls use cache

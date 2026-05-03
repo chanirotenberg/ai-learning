@@ -2,6 +2,7 @@ import "dotenv/config";
 import OpenAI from "openai";
 import { tools } from "./tools.js";
 import { executeToolCalls } from "./toolImplementations.js";
+import { withRetry } from "../week-12-reliability-costs/retryHelper.js";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -20,12 +21,14 @@ export async function runAgent(userMessage) {
     },
   ];
 
-  const firstResponse = await openai.chat.completions.create({
-    model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-    messages,
-    tools,
-    tool_choice: "auto",
-  });
+  const firstResponse = await withRetry(() =>
+    openai.chat.completions.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      messages,
+      tools,
+      tool_choice: "auto",
+    })
+  );
 
   const assistantMessage = firstResponse.choices[0].message;
   messages.push(assistantMessage);
@@ -41,10 +44,12 @@ export async function runAgent(userMessage) {
   const toolResults = await executeToolCalls(assistantMessage.tool_calls);
   messages.push(...toolResults);
 
-  const finalResponse = await openai.chat.completions.create({
-    model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-    messages,
-  });
+  const finalResponse = await withRetry(() =>
+    openai.chat.completions.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      messages,
+    })
+  );
 
   const finalMessage = finalResponse.choices[0].message;
 

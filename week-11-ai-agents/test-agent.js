@@ -1,7 +1,7 @@
 import { runAgent } from "./agent.js";
 
 async function main() {
-  const result = await runAgent("Summarize documents about AI.");
+  const result = await runAgent("Summarize AI documents from the last 7 days.");
 
   console.log("Agent answer:");
   console.log(result.answer);

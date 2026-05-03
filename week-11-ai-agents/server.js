@@ -2,6 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { runAgent } from "./agent.js";
+import {
+  generalLimiter,
+  aiLimiter,
+} from "../week-12-reliability-costs/rateLimiters.js";
 
 const app = express();
 const PORT = process.env.AGENT_PORT || 3007;
@@ -9,13 +13,15 @@ const PORT = process.env.AGENT_PORT || 3007;
 app.use(cors());
 app.use(express.json());
 
+app.use("/api", generalLimiter);
+
 app.get("/", (req, res) => {
   res.json({
     message: "Week 11 AI Agent server is running",
   });
 });
 
-app.post("/api/agent", async (req, res) => {
+app.post("/api/agent", aiLimiter, async (req, res) => {
   try {
     const { message } = req.body;
 

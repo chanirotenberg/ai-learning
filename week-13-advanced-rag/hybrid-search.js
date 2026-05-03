@@ -1,5 +1,4 @@
 import { generateEmbedding } from "../week-10-rag-pgvector/embeddings.js";
-import { searchSimilar } from "../week-10-rag-pgvector/rag-database.js";
 import { pool } from "../week-10-rag-pgvector/db.js";
 
 export async function textSearch(query, limit = 5, filters = {}) {
@@ -60,6 +59,20 @@ export async function vectorSearchWithMetadata(query, limit = 5, filters = {}) {
   return result.rows;
 }
 
+function calculateCombinedScore(result) {
+  const vectorScore =
+    result.vector_distance === null || result.vector_distance === undefined
+      ? 0
+      : 1 / (1 + Number(result.vector_distance));
+
+  const textScore = result.text_score ? Number(result.text_score) : 0;
+
+  const vectorWeight = 0.7;
+  const textWeight = 0.3;
+
+  return Number((vectorScore * vectorWeight + textScore * textWeight).toFixed(6));
+}
+
 function combineResults(vectorResults, textResults) {
   const resultsMap = new Map();
 
@@ -71,6 +84,7 @@ function combineResults(vectorResults, textResults) {
       created_at: result.created_at || null,
       metadata: result.metadata || {},
       vector_distance: result.distance,
+      text_score: 0,
       found_by_vector: true,
       found_by_text: false,
     });
@@ -99,17 +113,24 @@ function combineResults(vectorResults, textResults) {
     }
   }
 
-  return Array.from(resultsMap.values());
+  return Array.from(resultsMap.values()).map((result) => ({
+    ...result,
+    combined_score: calculateCombinedScore(result),
+  }));
 }
 
 export async function hybridSearch(query, limit = 5, filters = {}) {
   const vectorResults = await vectorSearchWithMetadata(query, limit, filters);
   const textResults = await textSearch(query, limit, filters);
-  const combinedResults = combineResults(vectorResults, textResults);
+
+  const combinedResults = combineResults(vectorResults, textResults)
+    .sort((a, b) => b.combined_score - a.combined_score)
+    .slice(0, limit);
 
   return {
     query,
     filters,
+    topK: limit,
     vector_results: vectorResults,
     text_results: textResults,
     combined_results: combinedResults,

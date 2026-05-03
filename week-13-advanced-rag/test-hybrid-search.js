@@ -1,10 +1,9 @@
 import { hybridSearch } from "./hybrid-search.js";
 
 async function main() {
-const result = await hybridSearch("AI", 5, {
-  userId: "demo-user",
-  category: "backend",
-});
+  const result = await hybridSearch("AI", 2, {
+    userId: "demo-user",
+  });
 
   console.log("Query:");
   console.log(result.query);
@@ -12,13 +11,10 @@ const result = await hybridSearch("AI", 5, {
   console.log("\nFilters:");
   console.log(result.filters);
 
-  console.log("\nVector results:");
-  console.table(result.vector_results);
+  console.log("\nTopK:");
+  console.log(result.topK);
 
-  console.log("\nText results:");
-  console.table(result.text_results);
-
-  console.log("\nCombined results:");
+  console.log("\nCombined re-ranked results:");
   console.table(result.combined_results);
 }
 

@@ -2,7 +2,9 @@ import { generateEmbedding } from "../week-10-rag-pgvector/embeddings.js";
 import { searchSimilar } from "../week-10-rag-pgvector/rag-database.js";
 import { pool } from "../week-10-rag-pgvector/db.js";
 
-export async function textSearch(query, limit = 5) {
+export async function textSearch(query, limit = 5, filters = {}) {
+  const { userId, category } = filters;
+
   const result = await pool.query(
     `
     SELECT
@@ -10,6 +12,7 @@ export async function textSearch(query, limit = 5) {
       d.title,
       d.content,
       d.created_at,
+      d.metadata,
       ts_rank(
         to_tsvector('english', d.title || ' ' || d.content),
         plainto_tsquery('english', $1)
@@ -18,10 +21,40 @@ export async function textSearch(query, limit = 5) {
     WHERE
       to_tsvector('english', d.title || ' ' || d.content)
       @@ plainto_tsquery('english', $1)
+      AND ($3::text IS NULL OR d.metadata->>'user_id' = $3)
+      AND ($4::text IS NULL OR d.metadata->>'category' = $4)
     ORDER BY text_score DESC
     LIMIT $2
     `,
-    [query, limit]
+    [query, limit, userId || null, category || null]
+  );
+
+  return result.rows;
+}
+
+export async function vectorSearchWithMetadata(query, limit = 5, filters = {}) {
+  const { userId, category } = filters;
+  const embedding = await generateEmbedding(query);
+
+  const result = await pool.query(
+    `
+    SELECT
+      e.id,
+      e.document_id,
+      d.title,
+      e.content,
+      d.created_at,
+      d.metadata,
+      e.embedding <-> $1::vector AS distance
+    FROM rag_embeddings e
+    JOIN rag_documents d ON d.id = e.document_id
+    WHERE
+      ($3::text IS NULL OR d.metadata->>'user_id' = $3)
+      AND ($4::text IS NULL OR d.metadata->>'category' = $4)
+    ORDER BY distance ASC
+    LIMIT $2
+    `,
+    [`[${embedding.join(",")}]`, limit, userId || null, category || null]
   );
 
   return result.rows;
@@ -36,6 +69,7 @@ function combineResults(vectorResults, textResults) {
       title: result.title,
       content: result.content,
       created_at: result.created_at || null,
+      metadata: result.metadata || {},
       vector_distance: result.distance,
       found_by_vector: true,
       found_by_text: false,
@@ -49,12 +83,14 @@ function combineResults(vectorResults, textResults) {
       existingResult.found_by_text = true;
       existingResult.text_score = Number(result.text_score);
       existingResult.created_at = existingResult.created_at || result.created_at;
+      existingResult.metadata = existingResult.metadata || result.metadata || {};
     } else {
       resultsMap.set(result.document_id, {
         document_id: result.document_id,
         title: result.title,
         content: result.content,
         created_at: result.created_at,
+        metadata: result.metadata || {},
         vector_distance: null,
         text_score: Number(result.text_score),
         found_by_vector: false,
@@ -66,15 +102,14 @@ function combineResults(vectorResults, textResults) {
   return Array.from(resultsMap.values());
 }
 
-export async function hybridSearch(query, limit = 5) {
-  const embedding = await generateEmbedding(query);
-
-  const vectorResults = await searchSimilar(embedding, limit);
-  const textResults = await textSearch(query, limit);
+export async function hybridSearch(query, limit = 5, filters = {}) {
+  const vectorResults = await vectorSearchWithMetadata(query, limit, filters);
+  const textResults = await textSearch(query, limit, filters);
   const combinedResults = combineResults(vectorResults, textResults);
 
   return {
     query,
+    filters,
     vector_results: vectorResults,
     text_results: textResults,
     combined_results: combinedResults,

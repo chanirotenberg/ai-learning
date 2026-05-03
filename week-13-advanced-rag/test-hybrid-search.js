@@ -1,10 +1,16 @@
 import { hybridSearch } from "./hybrid-search.js";
 
 async function main() {
-  const result = await hybridSearch("AI");
+const result = await hybridSearch("AI", 5, {
+  userId: "demo-user",
+  category: "backend",
+});
 
   console.log("Query:");
   console.log(result.query);
+
+  console.log("\nFilters:");
+  console.log(result.filters);
 
   console.log("\nVector results:");
   console.table(result.vector_results);

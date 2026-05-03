@@ -14,6 +14,9 @@ async function main() {
 
   console.log("\nTokens used:");
   console.log(result.tokens_used);
+
+  console.log("\nEstimated cost USD:");
+  console.log(result.estimated_cost_usd);
 }
 
 main().catch((error) => {

@@ -3,10 +3,13 @@ import OpenAI from "openai";
 import { tools } from "./tools.js";
 import { executeToolCalls } from "./toolImplementations.js";
 import { withRetry } from "../week-12-reliability-costs/retryHelper.js";
+import { calculateCost } from "../week-12-reliability-costs/costTracker.js";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
 export async function runAgent(userMessage) {
   const messages = [
@@ -23,7 +26,7 @@ export async function runAgent(userMessage) {
 
   const firstResponse = await withRetry(() =>
     openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model,
       messages,
       tools,
       tool_choice: "auto",
@@ -34,10 +37,17 @@ export async function runAgent(userMessage) {
   messages.push(assistantMessage);
 
   if (!assistantMessage.tool_calls || assistantMessage.tool_calls.length === 0) {
+    const cost = calculateCost({
+      model,
+      promptTokens: firstResponse.usage?.prompt_tokens || 0,
+      completionTokens: firstResponse.usage?.completion_tokens || 0,
+    });
+
     return {
       answer: assistantMessage.content,
       used_tools: [],
       tokens_used: firstResponse.usage?.total_tokens || 0,
+      estimated_cost_usd: cost.estimated_cost_usd,
     };
   }
 
@@ -46,12 +56,26 @@ export async function runAgent(userMessage) {
 
   const finalResponse = await withRetry(() =>
     openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model,
       messages,
     })
   );
 
   const finalMessage = finalResponse.choices[0].message;
+
+  const promptTokens =
+    (firstResponse.usage?.prompt_tokens || 0) +
+    (finalResponse.usage?.prompt_tokens || 0);
+
+  const completionTokens =
+    (firstResponse.usage?.completion_tokens || 0) +
+    (finalResponse.usage?.completion_tokens || 0);
+
+  const cost = calculateCost({
+    model,
+    promptTokens,
+    completionTokens,
+  });
 
   return {
     answer: finalMessage.content,
@@ -63,5 +87,6 @@ export async function runAgent(userMessage) {
     tokens_used:
       (firstResponse.usage?.total_tokens || 0) +
       (finalResponse.usage?.total_tokens || 0),
+    estimated_cost_usd: cost.estimated_cost_usd,
   };
 }

@@ -73,15 +73,6 @@ GET  http://localhost:3007/api/stats
 POST http://localhost:3008/api/feedback
 GET  http://localhost:3008/api/feedback
 ```
-
-```powershell
-git status
-git add README.md
-git commit -m "week 14 add quick start"
-git push
-git status
-```
-
 This repository documents my practical AI learning path.
 
 ## Week 1 — OpenAI API Hello World

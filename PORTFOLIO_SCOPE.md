@@ -66,6 +66,8 @@ A full-stack AI knowledge base system that allows users to search, summarize, an
 - Rate limiting
 - Cost tracking
 - Redis embedding cache
+- Automated tests
+- Database migrations
 - `/api/stats`
 
 ### Documentation
@@ -85,7 +87,7 @@ The following are intentionally not completed yet:
 - Production deployment
 - Authentication
 - User management
-- Full test suite
+- Full production-grade test suite
 - CI/CD deployment to AWS
 - Demo video
 - Public hosted URL

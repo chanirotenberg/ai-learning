@@ -1122,3 +1122,165 @@ Completed:
 - Configured 24-hour cache TTL
 - Verified cache hit
 - Verified repeated embedding calls use cache
+
+## Week 13 — Advanced RAG and Quality Improvements
+
+In this week I improved the RAG system with hybrid search, metadata filtering, re-ranking, chunking, and feedback collection.
+
+## What I built
+
+- Hybrid search combining vector search and PostgreSQL full text search
+- Metadata filtering by `user_id` and `category`
+- Re-ranking with combined scores
+- TopK result filtering
+- Document chunking with overlap
+- Feedback loop for marking search results as relevant or not relevant
+
+## Hybrid Search
+
+Created:
+
+- `week-13-advanced-rag/hybrid-search.js`
+- `week-13-advanced-rag/test-hybrid-search.js`
+
+The hybrid search combines:
+
+- pgvector similarity search
+- PostgreSQL full text search using `to_tsvector`, `plainto_tsquery`, and `ts_rank`
+- merged results without duplicates
+
+## Metadata Filtering
+
+Created:
+
+- `week-13-advanced-rag/add-metadata-column.sql`
+
+Added metadata to `rag_documents`:
+
+```json
+{
+  "user_id": "demo-user",
+  "category": "ai"
+}
+```
+
+The search supports filtering by:
+
+- `user_id`
+- `category`
+
+## Re-ranking
+
+Hybrid results are re-ranked using a combined score:
+
+- vector score
+- text score
+- weighted final score
+
+The search returns only the topK results.
+
+## Chunking
+
+Created:
+
+- `week-13-advanced-rag/chunking.js`
+- `week-13-advanced-rag/test-chunking.js`
+
+The chunking logic supports:
+
+- configurable `chunkSize`
+- configurable `overlap`
+- splitting long documents into smaller chunks
+
+## Feedback Loop
+
+Created:
+
+- `week-13-advanced-rag/create-feedback-table.sql`
+- `week-13-advanced-rag/feedback-database.js`
+- `week-13-advanced-rag/server.js`
+
+Added endpoints:
+
+```http
+POST /api/feedback
+GET /api/feedback
+```
+
+Example feedback request:
+
+```json
+{
+  "query": "AI",
+  "documentId": 1,
+  "isRelevant": true,
+  "comment": "Relevant result for AI query"
+}
+```
+
+## How to run Week 13 checks
+
+Test hybrid search:
+
+```powershell
+node .\week-13-advanced-rag\test-hybrid-search.js
+```
+
+Test chunking:
+
+```powershell
+node .\week-13-advanced-rag\test-chunking.js
+```
+
+Run the Week 13 server:
+
+```powershell
+node .\week-13-advanced-rag\server.js
+```
+
+Test feedback endpoint:
+
+```powershell
+$body = @{
+  query = "AI"
+  documentId = 1
+  isRelevant = $true
+  comment = "Relevant result for AI query"
+} | ConvertTo-Json
+
+Invoke-RestMethod `
+  -Uri "http://localhost:3008/api/feedback" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body $body
+```
+
+Get feedback:
+
+```powershell
+Invoke-RestMethod `
+  -Uri "http://localhost:3008/api/feedback" `
+  -Method GET
+```
+
+## Week 13 status
+
+Completed:
+
+- Combined vector search with text search
+- Used PostgreSQL full text search
+- Merged results without duplicates
+- Added `metadata JSONB`
+- Supported filtering by `user_id`
+- Supported filtering by `category`
+- Verified filters do not break search
+- Calculated combined score
+- Re-ranked results
+- Returned only topK
+- Created `chunkDocument`
+- Added configurable `chunkSize`
+- Added overlap
+- Tested long documents
+- Created feedback table
+- Added `/api/feedback`
+- Saved relevance feedback

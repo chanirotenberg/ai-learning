@@ -1,5 +1,29 @@
 # AI Learning
 
+## AI Knowledge Base Assistant
+
+AI Knowledge Base Assistant is a practical full-stack AI portfolio project.
+
+It demonstrates how to build real AI features using Node.js, React, PostgreSQL, pgvector, Redis, OpenAI API, RAG, AI Agents, Tool Calling, Hybrid Search, Cost Tracking, Rate Limiting, Retry logic, Embedding Cache, and Feedback Loop.
+
+The project includes:
+
+- React frontend for AI interactions
+- Express APIs for AI analysis, chat, summaries, RAG, agents, and feedback
+- PostgreSQL database for structured data
+- pgvector for semantic search
+- Redis for embedding cache
+- AI Agent with tool calling
+- Advanced RAG with hybrid search, metadata filtering, re-ranking, chunking, and feedback
+- Documentation, architecture, and runbook for portfolio presentation
+
+Main portfolio docs:
+
+- `ARCHITECTURE.md`
+- `PORTFOLIO_RUNBOOK.md`
+- `DEPLOYMENT.md`
+- `AWS_DEPLOYMENT_CHECKLIST.md`
+
 This repository documents my practical AI learning path.
 
 ## Week 1 — OpenAI API Hello World

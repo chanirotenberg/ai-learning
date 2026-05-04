@@ -24,6 +24,64 @@ Main portfolio docs:
 - `DEPLOYMENT.md`
 - `AWS_DEPLOYMENT_CHECKLIST.md`
 
+## Quick Start
+
+Start infrastructure:
+
+```powershell
+docker start pgvector-db
+docker start redis-cache
+```
+
+Run RAG API:
+
+```powershell
+node .\week-10-rag-pgvector\server.js
+```
+
+Run Agent API:
+
+```powershell
+node .\week-11-ai-agents\server.js
+```
+
+Run Advanced RAG Feedback API:
+
+```powershell
+node .\week-13-advanced-rag\server.js
+```
+
+Run frontend:
+
+```powershell
+cd ai-frontend
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+Main local endpoints:
+
+```text
+POST http://localhost:3006/api/rag-search
+POST http://localhost:3007/api/agent
+GET  http://localhost:3007/api/stats
+POST http://localhost:3008/api/feedback
+GET  http://localhost:3008/api/feedback
+```
+
+```powershell
+git status
+git add README.md
+git commit -m "week 14 add quick start"
+git push
+git status
+```
+
 This repository documents my practical AI learning path.
 
 ## Week 1 — OpenAI API Hello World

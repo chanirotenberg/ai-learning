@@ -227,6 +227,17 @@ Available frontend screens:
 
 ## Useful Tests
 
+### Run Automated Tests
+
+```powershell
+npm test
+```
+
+This runs:
+
+- unit tests for chunking
+- integration test for hybrid search with database, metadata filtering, and re-ranking
+
 ### Test Hybrid Search
 
 ```powershell

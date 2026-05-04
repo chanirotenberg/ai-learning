@@ -87,8 +87,20 @@
 | `ARCHITECTURE.md` | Done |
 | `PORTFOLIO_RUNBOOK.md` | Done |
 | `PORTFOLIO_PRESENTATION.md` | Done |
+| `PORTFOLIO_SCOPE.md` | Done |
 | `DEPLOYMENT.md` | Done |
 | `AWS_DEPLOYMENT_CHECKLIST.md` | Done |
+
+## Quality
+
+| Feature | Status | Location |
+|---|---:|---|
+| Database migrations | Done | `migrations/` |
+| RAG database schema migration | Done | `migrations/001_rag_schema.sql` |
+| Core app schema migration | Done | `migrations/002_core_app_schema.sql` |
+| Unit tests | Done | `tests/chunking.test.js` |
+| Integration tests | Done | `tests/hybrid-search.integration.test.js` |
+| Test command | Done | `npm test` |
 
 ## Still Not Done
 

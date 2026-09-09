@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.92.0",
     "@langchain/core": "^1.1.42",
     "@langchain/openai": "^1.4.5",
     "cors": "^2.8.6",

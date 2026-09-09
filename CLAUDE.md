@@ -90,3 +90,4 @@ Tests live in `tests/` and use Node's built-in `node:test` + `node:assert/strict
 
 אל תדלג/י על שלב גם אם הוא נראה מיותר. אל תיצור/י commit לפני Green Build.
 כל Story = commit נפרד. אל תערבב/י כמה שינויים ל-commit אחד.
+8. **Release** — אחרי commit מקומי מוצלח, הפעל/י את סוכן ה-release-manager. הוא יציג סיכום מלא של מה שהולך להידחף (commits, branch, קבצים) ויחכה לאישור מפורש שלך בטקסט לפני שהוא מריץ git push. **לעולם אל תדחוף/י ישירות בלי לעבור דרך השלב הזה.**
